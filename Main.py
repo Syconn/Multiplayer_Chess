@@ -1,28 +1,28 @@
 import sys
-import pygame as py
+import pygame
 from Board import Board
 
 # Vars
 running = True
-piece_size = 32
-board_size = piece_size * 8
+square_size = 32
+board_size = square_size * 8
 scale = 3
-board = Board(piece_size, board_size, scale)
+board = Board(square_size, scale)
 # dt = clock.tick(60) / 1000 Delta Time
 
-py.init()
-screen = py.display.set_mode((board_size * scale, board_size * scale))
-clock = py.time.Clock()
-py.display.set_caption("Multiplayer Chess")
+pygame.init()
+screen = pygame.display.set_mode((board_size * scale, board_size * scale))
+clock = pygame.time.Clock()
+pygame.display.set_caption("Multiplayer Chess")
 
 while running:
-    for event in py.event.get():
-        if event.type == py.QUIT: running = False
+    for event in pygame.event.get():
+        if event.type == pygame.QUIT: running = False
 
     board.render(screen)
 
-    py.display.flip()
+    pygame.display.flip()
     clock.tick(60)
 
-py.quit()
+pygame.quit()
 sys.exit()
