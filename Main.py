@@ -22,7 +22,6 @@ while running:
         elif event.type == pygame.K_ESCAPE: running = False
 
     board.render(screen, dt)
-
     pygame.display.flip()
     dt = clock.tick(60) / 1000
 

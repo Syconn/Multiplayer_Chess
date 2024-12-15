@@ -1,12 +1,12 @@
 {
     "board": {
-        "0": "RKBKQBKR",
+        "0": "RKBOQBKR",
         "1": "PPPPPPPP",
         "2": "eeeeeeee",
         "3": "eeeeeeee",
-        "4": "eeeeeeee",
+        "4": "eeeeeoee",
         "5": "eeeeeeee",
         "6": "pppppppp",
-        "7": "rkbkqbkr"
+        "7": "rkboqbkr"
     }
 }
