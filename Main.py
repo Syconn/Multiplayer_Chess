@@ -1,6 +1,7 @@
 import sys
 import pygame
 from Board import Board
+from Chess import Chess
 
 # Vars
 running = True
@@ -8,6 +9,7 @@ square_size = 32
 board_size = square_size * 8
 scale = 3
 board = Board(square_size, scale)
+chess = Chess(board, square_size * scale)
 dt = 0
 
 pygame.init()
@@ -18,10 +20,10 @@ pygame.display.set_caption("Multiplayer Chess")
 while running:
     for event in pygame.event.get():
         if event.type == pygame.QUIT: running = False
-        elif event.type == pygame.MOUSEBUTTONDOWN: board.on_click(event.pos, event.button)
+        elif event.type == pygame.MOUSEBUTTONDOWN: chess.clicked(event.pos, event.button)
         elif event.type == pygame.K_ESCAPE: running = False
 
-    board.render(screen, dt)
+    board.render(screen)
     pygame.display.flip()
     dt = clock.tick(60) / 1000
 

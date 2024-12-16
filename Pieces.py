@@ -1,3 +1,5 @@
+# Manages Piece Functionality
+
 from enum import Enum
 import pygame
 
@@ -30,10 +32,19 @@ class Piece:
     
     def piece(self, pos : tuple[int, int]) -> "Piece":
         return self._board.piece(pos)
+
+    def type(self) -> PieceType:
+        return self._piece
+
+    def team(self, color : int) -> bool:
+        return self._color == color
     
     def image(self):
         if self._piece == PieceType.Empty: return None
-        return pygame.transform.scale(pygame.image.load("assets/" + ("White/" if self._color == 0 else "Black/") + self._piece.name + ".png"), (self._scalar, self._scalar))
+        return pygame.transform.scale(pygame.image.load("assets/" + ("White/" if self._color == 1 else "Black/") + self._piece.name + ".png"), (self._scalar, self._scalar))
+
+    def pos(self) -> tuple[int, int]:
+        return self._pos
 
     def set_pos(self, pos : tuple[int, int]) -> "Piece":
         self._pos = pos
@@ -44,8 +55,7 @@ class Piece:
         if self._piece != PieceType.Empty: screen.blit(self._image, (self._pos[0] * self._scalar, self._pos[1] * self._scalar))
 
     def forward(self) -> int:
-        if self._color == 1: return 1
-        return -1
+        return -1 if self._color == 1 else 1
 
     def offset(self, offset : tuple[int, int]) -> tuple[int, int]:
         return offset[0] + self._pos[0], offset[1] + self._pos[1]
@@ -129,3 +139,6 @@ class Piece:
     def end_or_take(self, pos : tuple[int, int]) -> bool:
         if not in_bounds(pos): return False
         return self.piece(pos)._piece != PieceType.Empty
+
+    def __str__(self):
+        return self._piece.name + " " + str(self._pos)
