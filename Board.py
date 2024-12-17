@@ -39,6 +39,13 @@ class Board:
                     board[x, int(y)] = self.create_piece(p, x, int(y))
         return board
 
+    def empty_board(self) -> dict[tuple[int, int], Piece]:
+        board = {}
+        for x in range(8):
+            for y in range(8):
+                board[x, y] = Piece(self, (x, y))
+        return board
+
     def piece(self, pos: tuple[int, int]) -> Piece:
         return self._board[pos]
 
@@ -114,5 +121,18 @@ class Board:
             elif flag1 == letter: return Piece(self, (x, y), piece, self._images[piece, 2], 2)
             elif flag2 == letter: return Piece(self, (x, y), piece, self._images[piece, 1], 1)
 
-    def send_data(self) -> bytes:
-        pass
+    def send(self) -> bytes:
+        data = ""
+        for piece in self._board.values():
+            if piece.type() != PieceType.Empty: data += piece.encode() + "|"
+        return data.encode()
+
+    def receive(self, received: bytes):
+        board = self.empty_board()
+        for data in filter(None, received.decode().split("|")):
+            info = data.split()
+            pos = eval(info[1])
+            piece = PieceType(int(info[0]))
+            color = int(info[2])
+            board[pos] = Piece(self, pos, piece, self._images[piece, color], color)
+        self._board = board

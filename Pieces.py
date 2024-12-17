@@ -123,7 +123,7 @@ class Piece:
         return self.piece(pos)._piece != PieceType.Empty
 
     def __str__(self) -> str:
-        return self._piece.name + " " + str(self._pos)
+        return self._piece.name + " " + str(self._pos).replace(" ", "")
 
     def encode(self) -> str:
-        return str(self) + " " + str(self._color)
+        return str(self._piece.value) + " " + str(self._pos).replace(" ", "") + " " + str(self._color)
