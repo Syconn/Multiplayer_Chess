@@ -127,9 +127,9 @@ class Board:
             if piece.type() != PieceType.Empty: data += piece.encode() + "|"
         return data.encode()
 
-    def receive(self, received: bytes):
+    def receive(self, received: str):
         board = self.empty_board()
-        for data in filter(None, received.decode().split("|")):
+        for data in filter(None, received.split("|")):
             info = data.split()
             pos = eval(info[1])
             piece = PieceType(int(info[0]))
