@@ -1,4 +1,5 @@
 import Network
+
 # from Board import Board
 # from Chess import Chess
 
@@ -26,4 +27,5 @@ import Network
 
 # Network Setup
 
-Network.setup()
+if __name__ == "__main__":
+    Network.setup()

@@ -8,12 +8,12 @@ from Chess import Chess
 def setup():
     mode = input()
     if mode[:2] == "-s":
-        server(mode[3:] if len(mode) > 3 and mode[3:].isnumeric() else 12345)
+        start_server(mode[3:] if len(mode) > 3 and mode[3:].isnumeric() else 12345)
     elif mode[:2] == "-c":
-        client(mode[3:] if len(mode) > 3 and mode[3:].isnumeric() else 12345)
+        start_client(mode[3:] if len(mode) > 3 and mode[3:].isnumeric() else 12345)
 
 
-def server(port):
+def start_server(port):
     network = socket.socket()
     network.bind(("localhost", int(port)))
     network.listen(1)
@@ -23,7 +23,8 @@ def server(port):
     main_loop("server")
     network.close()
 
-def client(port):
+
+def start_client(port):
     network = socket.socket()
     network.connect(("localhost", int(port)))
     main_loop("client")
@@ -47,9 +48,12 @@ def main_loop(version):
 
     while running:
         for event in pygame.event.get():
-            if event.type == pygame.QUIT: running = False
-            elif event.type == pygame.MOUSEBUTTONDOWN: chess.clicked(event.pos, event.button)
-            elif event.type == pygame.K_ESCAPE: running = False
+            if event.type == pygame.QUIT:
+                running = False
+            elif event.type == pygame.MOUSEBUTTONDOWN:
+                chess.clicked(event.pos, event.button)
+            elif event.type == pygame.K_ESCAPE:
+                running = False
 
         board.render(screen)
         pygame.display.flip()

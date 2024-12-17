@@ -2,9 +2,10 @@
 
 import Board
 
+
 class Chess:
 
-    def __init__(self, board : Board.Board, scalar : int):
+    def __init__(self, board: Board.Board, scalar: int):
         self._board = board
         self._scalar = scalar
         self._turn = 1
@@ -16,14 +17,17 @@ class Chess:
     def clicked(self, pos: tuple[int, int], button: int):
         square = (pos[0] // self._scalar, pos[1] // self._scalar)
         if button == 1:
-            if square in self._board.moves(): self.move(square)
-            else: self._board.set_selection(square, self._turn)
+            if square in self._board.moves():
+                self.move(square)
+            else:
+                self._board.set_selection(square, self._turn)
 
     def move(self, pos: tuple[int, int]):
         piece1 = self._board.piece(self._board.selection())
         piece2 = self._board.move(self._board.selection(), pos)
         self.eval_position()
-        if self._check[self._turn - 1]: self._board.undo(piece1.set_pos(self._board.selection()), piece2)
+        if self._check[self._turn - 1]:
+            self._board.undo(piece1.set_pos(self._board.selection()), piece2)
         else:
             self._board.clear_selection()
             self._turn = self.next()
