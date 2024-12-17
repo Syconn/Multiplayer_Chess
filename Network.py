@@ -1,3 +1,5 @@
+# Handles Networking
+
 import socket
 import sys
 import pygame
@@ -5,7 +7,15 @@ from Board import Board
 from Chess import Chess
 
 
-def setup():
+def update():
+    pass
+
+
+def receive():
+    pass
+
+
+def start():
     mode = input()
     if mode[:2] == "-s":
         start_server(mode[3:] if len(mode) > 3 and mode[3:].isnumeric() else 12345)
@@ -21,6 +31,7 @@ def start_server(port):
     client, address = network.accept()
     print("Client Joined at " + str(address))
     main_loop("server")
+
     network.close()
 
 
@@ -46,6 +57,7 @@ def main_loop(version):
     clock = pygame.time.Clock()
     pygame.display.set_caption("Multiplayer Chess -" + version)
 
+    # Game Loop
     while running:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -59,5 +71,10 @@ def main_loop(version):
         pygame.display.flip()
         clock.tick(60)
 
+    # Safe Exit
     pygame.quit()
     sys.exit()
+
+
+if __name__ == "__main__":
+    start()

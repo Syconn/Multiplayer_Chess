@@ -1,7 +1,10 @@
-# Manages Piece Functionality
+# Manages Piece Data/Functionality
 
-from enum import Enum
 import pygame
+from enum import Enum
+from typing import TYPE_CHECKING
+
+if TYPE_CHECKING: from Board import Board
 
 
 def in_bounds(pos: tuple[int, int]) -> bool:
@@ -20,14 +23,13 @@ class PieceType(Enum):
 
 class Piece:
 
-    def __init__(self, piece: PieceType, board, pos: tuple[int, int], square_size: int, scale: int, color: int = 3):
+    def __init__(self, board: "Board", pos: tuple[int, int], piece: PieceType = PieceType.Empty,
+                 image: pygame.Surface | None = None, color: int = 3):
         self._pos = pos
         self._board = board
         self._piece = piece
         self._color = color
-        self._scalar = scale * square_size
-        self._square_size = square_size
-        self._image = self.image()
+        self._image = image
         self._unmoved = True
 
     def piece(self, pos: tuple[int, int]) -> "Piece":
@@ -39,12 +41,6 @@ class Piece:
     def team(self, color: int) -> bool:
         return self._color == color
 
-    def image(self):
-        if self._piece == PieceType.Empty: return None
-        return pygame.transform.scale(
-            pygame.image.load("assets/" + ("White/" if self._color == 1 else "Black/") + self._piece.name + ".png"),
-            (self._scalar, self._scalar))
-
     def pos(self) -> tuple[int, int]:
         return self._pos
 
@@ -53,9 +49,9 @@ class Piece:
         self._unmoved = False
         return self
 
-    def render(self, screen):
-        if self._piece != PieceType.Empty: screen.blit(self._image,
-                                                       (self._pos[0] * self._scalar, self._pos[1] * self._scalar))
+    def render(self, screen: pygame.Surface, scalar: int):
+        if self._piece != PieceType.Empty:
+            screen.blit(self._image, (self._pos[0] * scalar, self._pos[1] * scalar))
 
     def forward(self) -> int:
         return -1 if self._color == 1 else 1
@@ -126,5 +122,8 @@ class Piece:
         if not in_bounds(pos): return False
         return self.piece(pos)._piece != PieceType.Empty
 
-    def __str__(self):
+    def __str__(self) -> str:
         return self._piece.name + " " + str(self._pos)
+
+    def encode(self) -> str:
+        return str(self) + " " + str(self._color)
