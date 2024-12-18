@@ -2,7 +2,7 @@
 
 import pygame
 from enum import Enum
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Callable
 
 if TYPE_CHECKING: from Board import Board
 
@@ -49,9 +49,9 @@ class Piece:
         self._unmoved = False
         return self
 
-    def render(self, screen: pygame.Surface, scalar: int):
+    def render(self, screen: pygame.Surface, scalar: int, flip: Callable[[tuple[int, int], int], tuple[int, int]]):
         if self._piece != PieceType.Empty:
-            screen.blit(self._image, (self._pos[0] * scalar, self._pos[1] * scalar))
+            screen.blit(self._image, flip(self._pos, scalar))
 
     def forward(self) -> int:
         return -1 if self._color == 1 else 1

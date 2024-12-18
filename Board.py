@@ -7,16 +7,20 @@ from Pieces import Piece, PieceType
 
 class Board:
 
-    def __init__(self, scalar: int):
+    def __init__(self, scalar: int, flipped: bool = False):
         self._background = pygame.transform.scale(pygame.image.load("assets/Board.png"), (scalar * 8, scalar * 8))
         self._open_move = pygame.transform.scale(pygame.image.load("assets/Moves/Open.png"), (scalar, scalar))
         self._enemy_move = pygame.transform.scale(pygame.image.load("assets/Moves/Take.png"), (scalar, scalar))
         self._selector = pygame.transform.scale(pygame.image.load("assets/Selector/Selector1.png"), (scalar, scalar))
         self._scalar = scalar
+        self._flipped = flipped
         self._images = self.images()
         self._selected_pos = self.clear_selection()
         self._board = self.gen_board()
         self._moves = []
+
+    def set_flip(self, flip: bool):
+        self._flipped = flip
 
     def images(self) -> dict[tuple[PieceType, int], pygame.Surface]:
         images = {}
@@ -64,37 +68,29 @@ class Board:
 
         for move in self._moves:
             if self.piece(self._selected_pos).take(move):
-                screen.blit(self._enemy_move,
-                            (move[0] * self._scalar, move[1] * self._scalar))
+                screen.blit(self._enemy_move, self.flip(move, self._scalar))
             else:
-                screen.blit(self._open_move,
-                            (move[0] * self._scalar, move[1] * self._scalar))
+                screen.blit(self._open_move, self.flip(move, self._scalar))
 
         for x in range(8):
             for y in range(8):
-                self._board[x, y].render(screen, self._scalar)
+                self._board[x, y].render(screen, self._scalar, self.flip)
 
         if self._selected_pos != (-1, -1):
-            screen.blit(self._selector, (self._selected_pos[0] * self._scalar,
-                                         self._selected_pos[1] * self._scalar))
+            screen.blit(self._selector, self.flip(self._selected_pos, self._scalar))
 
-    def clicked(self, pos: tuple[int, int], button: int):
-        square = (pos[0] // self._scalar, pos[1] // self._scalar)
-        if button == 1:
-            if square in self._moves:
-                self.move(self._selected_pos, square)
-                self._moves = []
-                self._selected_pos = (-1, -1)
+    def flip(self, pos: tuple[int, int], scalar: int = 1) -> tuple[int, int]:
+        return (pos[0] * scalar, (7 - pos[1]) * scalar) if self._flipped else (pos[0] * scalar, pos[1] * scalar)
 
     def clear_selection(self) -> tuple[int, int]:
         self._moves = []
         self._selected_pos = (-1, -1)
         return self._selected_pos
 
-    def set_selection(self, pos: tuple[int, int], turn: int):
+    def set_selection(self, pos: tuple[int, int], turn: int, show_moves: bool):
         self.clear_selection()
         if self._selected_pos != pos: self._selected_pos = pos
-        if self.piece(pos).team(turn):
+        if self.piece(pos).team(turn) and show_moves:
             self._moves = self.piece(pos).get_moves()
 
     def moves(self) -> list[tuple[int, int]]:
